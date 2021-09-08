@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                             imageDescription = "Checking",
                         imageCrossFade = true
                         )
-                }/*https://cdn.bio.link/uploads/profile_pictures/2021-07-19/Q7m6oO7NBVuTxAltff25NRt9aGqRjYTZ.png*/
+                }
             }
         }
     }
