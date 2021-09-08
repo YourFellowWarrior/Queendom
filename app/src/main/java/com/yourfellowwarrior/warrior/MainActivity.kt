@@ -5,23 +5,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.GenericFontFamily
@@ -29,14 +21,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintSet
+import coil.compose.rememberImagePainter
 import com.google.android.material.snackbar.Snackbar
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.time.hours
 
 class MainActivity : ComponentActivity() {
+    @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -71,6 +61,20 @@ class MainActivity : ComponentActivity() {
                         }, modifier = Modifier
                     )
                 }
+                Row(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(10.dp)
+                ) {
+                    MaybeImageCard(
+                            onClick = { maybeSnackBar(localView,"Working Pretty Fine!") },
+                            cardModifier = Modifier.size(150.dp),
+                            boxModifier = Modifier.fillMaxSize(),
+                            imageURL = "https://cdn.bio.link/uploads/profile_pictures/2021-07-19/Q7m6oO7NBVuTxAltff25NRt9aGqRjYTZ.png",
+                            imageDescription = "Checking",
+                        imageCrossFade = true
+                        )
+                }/*https://cdn.bio.link/uploads/profile_pictures/2021-07-19/Q7m6oO7NBVuTxAltff25NRt9aGqRjYTZ.png*/
             }
         }
     }
@@ -141,6 +145,45 @@ fun MaybeText(
         fontSize = fontSize,
         fontWeight = fontWeight
     )
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun MaybeImageCard(
+    onClick: () -> Unit,
+    cardModifier: Modifier,
+    boxModifier: Modifier,
+    imageURL: String,
+    imageDescription: String,
+    imageCrossFade: Boolean
+) {
+    Card(onClick = onClick, modifier = cardModifier) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = boxModifier) {
+                MaybeFetchingImage(
+                    imageURL = imageURL,
+                    imageDescription = imageDescription,
+                    modifier = Modifier.fillMaxSize(),
+                    crossFade = imageCrossFade
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun MaybeFetchingImage(
+    imageURL: String,
+    imageDescription: String,
+    modifier: Modifier,
+    crossFade: Boolean
+) {
+    Image(painter = rememberImagePainter(
+        data = imageURL,
+        builder = {
+            crossfade(crossFade)
+        }
+    ), contentDescription = imageDescription, modifier = modifier)
 }
 
 @Preview(showBackground = true)
